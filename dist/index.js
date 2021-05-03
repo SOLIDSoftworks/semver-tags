@@ -23298,10 +23298,13 @@ async function calculateNextVersion(previous) {
     let patch = previous.matches[3];
 
     if(incrementedValue === 'major') {
-      major = parseInt(major) + 1
+      major = parseInt(major) + 1;
+      minor = 0;
+      patch = 0;
     }
     else if(incrementedValue === 'minor') {
       minor = parseInt(minor) + 1;
+      patch = 0;
     }
     else if(incrementedValue === 'patch') {
       patch = parseInt(patch) + 1;
@@ -23331,6 +23334,7 @@ async function calculateNextVersion(previous) {
 async function run() {
   const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
   const versionPrefix = core.getInput('version-prefix');
+  const dryRun = core.getInput('dry-run');
 
   const octokit = github.getOctokit(GITHUB_TOKEN);
   const { context = {} } = github;
@@ -23356,6 +23360,16 @@ async function run() {
   ;
   
   let next = await calculateNextVersion(previous);
+
+  if(dryRun === 'true') {
+    console.log('Action configured for dry run. Exiting.');
+    process.exit(0);
+  }
+
+  await octokit.rest.repos.createRelease({
+    ...context.repo,
+    tag_name: next
+  });
 }
 
 run();
