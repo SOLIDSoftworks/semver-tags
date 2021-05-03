@@ -4,6 +4,10 @@ inputs:
   GITHUB_TOKEN:
     description: The github token.
     required: true
+  version-prefix:
+    description: 'A value prefixed to the version number.'
+    required: false
+    default: ''
 outputs:
   version:
     description: 'The calculated version number.'
