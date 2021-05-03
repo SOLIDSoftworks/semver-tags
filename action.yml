@@ -1,7 +1,8 @@
 name: 'Semver tags'
 description: 'Gets the previous semver tag and calculates the next version. Optionally apply the version as a new tag.'
-icon: 'arrow-up-circle'
-color: 'gray-dark'
+branding:
+  icon: 'arrow-up-circle'
+  color: 'gray-dark'
 inputs:
   GITHUB_TOKEN:
     description: The github token.
