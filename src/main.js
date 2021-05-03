@@ -13,7 +13,7 @@ async function run() {
   const versionPrefix = core.getInput('version-prefix');
   const octokit = github.getOctokit(GITHUB_TOKEN);
   const { context = {} } = github;
-  const pattern = new RegExp(`^${versionPrefix}(\d+)\.(\d+)\.(\d+)(-\w[\w\.]*)?(\+\w[\w\.]*)?$`, m);
+  const pattern = new RegExp(`^${versionPrefix}(\d+)\.(\d+)\.(\d+)(-\w[\w\.]*)?(\+\w[\w\.]*)?$`, 'm');
 
   let response = await octokit.rest.repos.listTags({
     ...context.repo
