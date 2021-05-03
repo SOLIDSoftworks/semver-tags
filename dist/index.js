@@ -23284,8 +23284,13 @@ async function run() {
     ...context.repo
   });
 
+  if(response.status !== 200) {
+    console.err('Error in calling github api.');
+    process.exit(1);
+  }
+
   let previous = _
-    .chain(response)
+    .chain(response.data)
     .map('name')
     //.filter(name => )
     .head()
