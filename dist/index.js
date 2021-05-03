@@ -23366,6 +23366,7 @@ async function run() {
     process.exit(0);
   }
 
+  console.log(`Creating new release tag: ${ next } `);
   await octokit.rest.repos.createRelease({
     ...context.repo,
     tag_name: next
