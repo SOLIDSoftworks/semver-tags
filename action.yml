@@ -8,9 +8,13 @@ inputs:
     description: 'A value prefixed to the version number when tagging the repo.'
     required: false
     default: ''
+  default-version:
+    description: 'The version number that will be used if no semver tag is found.'
+    required: false
+    default: '1.0.0'
   incremented-value:
     description: 'What value should be incremented?'
-    required: true
+    required: false
     default: patch
   prerelease:
     description: 'The prerelease tag to use.'
