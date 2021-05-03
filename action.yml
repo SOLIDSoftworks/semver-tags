@@ -1,0 +1,25 @@
+name: 'Semver tags'
+description: 'Gets the previous semver tag and calculates the next version. Optionally apply the version as a new tag.'
+inputs:
+  increment:
+    description: 'What value should be incremented?'
+    required: true
+    default: patch
+  defaultVersion: 
+    description: 'What version should be used when no semver version tag is found.'
+    required: true
+    default: '1.0.0'
+  preRelease:
+    description: 'The prerelease tag to use.'
+    required: false
+  metadata:
+    description: 'The metadata to use.'
+    required: false
+outputs:
+  version:
+    description: 'The calculated version number.'
+  previousVersion:
+    description: 'The previous version number.'
+runs:
+  using: 'node12'
+  main: 'index.js'
