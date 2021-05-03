@@ -1,0 +1,18 @@
+
+  incremented-value:
+    description: 'What value should be incremented?'
+    required: true
+    default: patch
+  prefix:
+    description: 'A value prefixed to the version number?'
+    required: false
+  default-version: 
+    description: 'What version should be used when no semver version tag is found.'
+    required: true
+    default: '1.0.0'
+  pre-release:
+    description: 'The prerelease tag to use.'
+    required: false
+  metadata:
+    description: 'The metadata to use.'
+    required: false
