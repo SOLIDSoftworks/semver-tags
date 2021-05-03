@@ -23303,7 +23303,7 @@ async function run() {
     .map('name')
     .filter(name => pattern.test(name))
     .map(name => {
-      return { name: name, matches: pattern.match(name) };
+      return { name: name, matches: name.match(pattern) };
     })
     .head()
     .value()
