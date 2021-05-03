@@ -7,7 +7,7 @@ This action is designed to be used with CI/CD pipelines that automatically incre
 ### `GITHUB_TOKEN` **required** 
 The github token.
 
-### `tag-prefix` **required** 
+### `tag-prefix`
 A value prefixed to the version number when tagging the repo. 
 #### Default value `''`
 
@@ -15,7 +15,7 @@ A value prefixed to the version number when tagging the repo.
 The version number that will be used if no semver tag is found.
 #### Default value `'1.0.0'`
 
-### `incremented-value` **required** 
+### `incremented-value`
 What value should be incremented. 
 #### Allowed values `'major'|'minor'|'patch'` 
 #### Default value `'patch'`
