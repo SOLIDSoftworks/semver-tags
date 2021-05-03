@@ -4,12 +4,12 @@ const _ = require('lodash');
 
 async function calculateNextVersion(previous) {
   const defaultVersion = core.getInput('default-version');
-  const versionPrefix = core.getInput('version-prefix');
+  const tagPrefix = core.getInput('tag-prefix');
   const incrementedValue = core.getInput('incremented-value');
   const prerelease = core.getInput('prerelease');
   const metadata = core.getInput('metadata');
 
-  let next = versionPrefix;
+  let next = '';
 
   if(!previous) {
     core.setOutput('core-version', defaultVersion);
@@ -50,22 +50,22 @@ async function calculateNextVersion(previous) {
     next += `-${prerelease}`;
   }
   if(metadata) {
-    console.log(`´Metadata configured. Adding '${ metadata }' to version number.`);
+    console.log(`Metadata configured. Adding '${ metadata }' to version number.`);
     next += `+${metadata}`;
   }
   core.setOutput('semantic-version', next);
-  console.log(`Next version: ${next}`);
-  return next;
+  console.log(`Semantic version: ${next}`);
+  return tagPrefix + next;
 }
 
 async function run() {
   const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
-  const versionPrefix = core.getInput('version-prefix');
+  const tagPrefix = core.getInput('tag-prefix');
   const dryRun = core.getInput('dry-run');
 
   const octokit = github.getOctokit(GITHUB_TOKEN);
   const { context = {} } = github;
-  const pattern = new RegExp(`^${versionPrefix}(\\d+)\\.(\\d+)\\.(\\d+)(-(\\w[\\w\.]*))?(\\+(\\w[\\w\\.]*))?$`, 'm');
+  const pattern = new RegExp(`^${tagPrefix}(\\d+)\\.(\\d+)\\.(\\d+)(-(\\w[\\w\.]*))?(\\+(\\w[\\w\\.]*))?$`, 'm');
 
   let response = await octokit.rest.repos.listTags({
     ...context.repo

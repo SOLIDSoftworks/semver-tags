@@ -4,8 +4,8 @@ inputs:
   GITHUB_TOKEN:
     description: The github token.
     required: true
-  version-prefix:
-    description: 'A value prefixed to the version number.'
+  tag-prefix:
+    description: 'A value prefixed to the version number when tagging the repo.'
     required: false
     default: ''
   incremented-value:
