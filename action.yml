@@ -17,13 +17,17 @@ inputs:
     required: false
   metadata:
     description: 'The metadata to use.'
-    required: false    
+    required: false
+  dry-run:
+    description: 'Performs a version calculation without committing a tag.'
+    required: false
+    default: false
 outputs:
-  semanticVersion:
+  semantic-version:
     description: 'The calculated version number.'
-  coreVersion: 
+  core-version: 
     description: 'The core version part of the semantic version.'
-  previousVersion:
+  previous-version:
     description: 'The previous version number.'
 runs:
   using: 'node12'

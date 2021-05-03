@@ -12,10 +12,12 @@ async function calculateNextVersion(previous) {
   let next = versionPrefix;
 
   if(!previous) {
+    core.setOutput('core-version', defaultVersion);
     next += defaultVersion;
     console.log(`No previous version tag. Using '${ next }' as next version.`);
   }
   else {
+    core.setOutput('previous-version', previous.name);
     console.log(`Previous version tag '${ previous.name }' found. Calculating next version.`);
 
     let major = previous.matches[1];
@@ -35,7 +37,9 @@ async function calculateNextVersion(previous) {
       console.log(`Unsupported value in 'incremented-value'. Expected values: major,minor,patch.`);
       process.exit(1);
     }
-    next += `${major}.${minor}.${patch}`;
+    let coreVersion = `${major}.${minor}.${patch}`;
+    core.setOutput('core-version', coreVersion);
+    next += coreVersion;
   }
     
   if(prerelease) {
@@ -46,6 +50,7 @@ async function calculateNextVersion(previous) {
     console.log(`´Metadata configured. Adding '${ metadata }' to version number.`);
     next += `+${metadata}`;
   }
+  core.setOutput('semantic-version', next);
   console.log(`Next version: ${next}`);
   return next;
 }
