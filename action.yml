@@ -8,9 +8,21 @@ inputs:
     description: 'A value prefixed to the version number.'
     required: false
     default: ''
+  incremented-value:
+    description: 'What value should be incremented?'
+    required: true
+    default: patch
+  prerelease:
+    description: 'The prerelease tag to use.'
+    required: false
+  metadata:
+    description: 'The metadata to use.'
+    required: false    
 outputs:
-  version:
+  semanticVersion:
     description: 'The calculated version number.'
+  coreVersion: 
+    description: 'The core version part of the semantic version.'
   previousVersion:
     description: 'The previous version number.'
 runs:
