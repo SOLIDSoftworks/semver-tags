@@ -50,7 +50,7 @@ async function calculateNextVersion(previous) {
     next += `-${prerelease}`;
   }
   if(metadata) {
-    console.log(`Metadata configured. Adding '${ metadata }' to version number.`);
+    console.log(`Metadata configured. Adding '+${ metadata }' to version number.`);
     next += `+${metadata}`;
   }
   core.setOutput('semantic-version', next);
