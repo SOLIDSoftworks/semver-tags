@@ -62,6 +62,7 @@ async function run() {
   const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
   const tagPrefix = core.getInput('tag-prefix');
   const dryRun = core.getInput('dry-run');
+  const prerelease = !!core.getInput('prerelease');
 
   const octokit = github.getOctokit(GITHUB_TOKEN);
   const { context = {} } = github;
@@ -96,7 +97,8 @@ async function run() {
   console.log(`Creating new release tag: ${ next } `);
   await octokit.rest.repos.createRelease({
     ...context.repo,
-    tag_name: next
+    tag_name: next,
+    prerelease: prerelease
   });
 }
 
