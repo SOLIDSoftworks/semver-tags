@@ -88,8 +88,6 @@ async function run() {
     page++;
   }
 
-  console.log(`Found ${ tags.length } tags.`);
-  console.log(`tags: ${ tags.map(t => t.name).join(', ') }`);
   let previous = _
     .chain(tags)
     .map('name')
@@ -101,7 +99,6 @@ async function run() {
     .value()
   ;
 
-  console.log(`Previous tag: ${ previous ? previous.name : 'none' }`);
   let next = await calculateNextVersion(previous);
 
   if(dryRun === 'true') {
