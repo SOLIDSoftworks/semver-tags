@@ -44,7 +44,7 @@ async function calculateNextVersion(previous) {
     core.setOutput('core-version', coreVersion);
     next += coreVersion;
   }
-    
+
   if(prerelease) {
     console.log(`Prerelease configured. Adding '-${ prerelease }' to version number.`);
     next += `-${prerelease}`;
@@ -68,16 +68,28 @@ async function run() {
   const { context = {} } = github;
   const pattern = new RegExp(`^${tagPrefix}(\\d+)\\.(\\d+)\\.(\\d+)(-(\\w[\\w\.]*))?(\\+(\\w[\\w\\.]*))?$`, 'm');
 
-  let response = await octokit.rest.repos.listTags({
-    ...context.repo
-  });
-
-  if(response.status !== 200) {
-    console.err('Error in calling github api.');
-    process.exit(1);
+  let page = 1;
+  let tags = [];
+  while(true) {
+    const response = await octokit.repos.listTags({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      page,
+      per_page: 100
+    });
+    if(response.status !== 200) {
+      console.err('Error in calling github api.');
+      process.exit(1);
+    }
+    tags = tags.concat(response.data);
+    if(response.data.length < 100) {
+      break;
+    }
+    page++;
   }
+
   let previous = _
-    .chain(response.data)
+    .chain(tags)
     .map('name')
     .filter(name => pattern.test(name))
     .map(name => {
@@ -86,7 +98,7 @@ async function run() {
     .head()
     .value()
   ;
-  
+
   let next = await calculateNextVersion(previous);
 
   if(dryRun === 'true') {
