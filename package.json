@@ -15,5 +15,8 @@
     "@actions/github": "^4.0.0",
     "child_process": "^1.0.2",
     "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.34.0"
   }
 }
