@@ -1,11 +1,28 @@
 on:
   push:
-    branches: '*'
+    branches: 
+      - main  
+    paths:
+      - 'src/**/*.*'
+      - 'packages.json'
+      - '**.yml'
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm i
+      - run: npm run-script build      
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: Github actions
+          author_email: ${{ secrets.EMAIL }}
+          message: 'CI build'
+          add: '.'
       - uses: ./
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
