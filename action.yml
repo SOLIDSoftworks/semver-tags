@@ -48,6 +48,12 @@ outputs:
     description: 'The calculated version number.'
   core-version: 
     description: 'The core version part of the semantic version.'
+  major-version: 
+    description: 'The major version part of the semantic version.'
+  minor-version: 
+    description: 'The minor version part of the semantic version.'
+  patch-version: 
+    description: 'The patch version part of the semantic version.'
   previous-version:
     description: 'The previous version number.'
 runs:

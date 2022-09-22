@@ -2,10 +2,11 @@ const github = require('@actions/github');
 const core = require('@actions/core');
 const _ = require('lodash');
 
-const nextVersion = function(semver, major, minor) {
+const nextVersion = function(semver, major, minor, patch) {
   this.semver = semver;
   this.major = major;
   this.minor = minor;
+  this.patch = patch;
 };
 
 function generateVersionPattern(options) {
@@ -28,11 +29,12 @@ async function calculateNextVersion(previous) {
   const prerelease = core.getInput('prerelease');
   const metadata = core.getInput('metadata');
   const tagPrefix = core.getInput('tag-prefix');
-  const versionPattern = generateVersionPattern({ tagPrefix: tagPrefix, options: true });
+  const versionPattern = generateVersionPattern({ tagPrefix: tagPrefix, tagPrefixOptional: true });
 
   let semanticVersion = '';
   let majorVersion = '';
   let minorVersion = '';
+  let patchVersion = '';
   let major = '';
   let minor = '';
   let patch = '';
@@ -42,6 +44,7 @@ async function calculateNextVersion(previous) {
     let match = defaultVersion.match(versionPattern);
     major = match[1];
     minor = match[2];
+    patch = match[3];
     core.setOutput('core-version', defaultVersion);
     semanticVersion += defaultVersion; 
   }
@@ -71,11 +74,11 @@ async function calculateNextVersion(previous) {
     }
 
     let coreVersion = `${major}.${minor}.${patch}`;
-    core.setOutput('core-version', coreVersion);
     semanticVersion += coreVersion;
   }
-  majorVersion += major;
-  minorVersion += `${major}.${minor}`
+
+  console.log(`Core version: ${semanticVersion}`);
+  core.setOutput('core-version', semanticVersion);
 
   if(prerelease) {
     console.log(`Prerelease configured. Adding '-${ prerelease }' to version number.`);
@@ -85,11 +88,15 @@ async function calculateNextVersion(previous) {
     console.log(`Metadata configured. Adding '+${ metadata }' to version number.`);
     next += `+${metadata}`;
   }
-  core.setOutput('semantic-version', semanticVersion);
   console.log(`Semantic version: ${semanticVersion}`);
-  console.log(`Major version: ${majorVersion}`);
-  console.log(`Minor version: ${minorVersion}`);
-  return new nextVersion(tagPrefix + semanticVersion, tagPrefix + majorVersion, tagPrefix + minorVersion);
+  core.setOutput('semantic-version', semanticVersion);
+  console.log(`Major version: ${major}`);
+  core.setOutput('major-version', major);
+  console.log(`Minor version: ${minor}`);
+  core.setOutput('minor-version', minor);
+  console.log(`Patch version: ${patch}`);
+  core.setOutput('patch-version', patch);
+  return new nextVersion(semanticVersion, major, minor, patch);
 }
 
 async function run() {
@@ -148,7 +155,7 @@ async function run() {
   console.log(`Creating new release tag: ${ next.semver } `);
   await octokit.rest.repos.createRelease({
     ...context.repo,
-    tag_name: next.semver,
+    tag_name: tagPrefix + next.semver,
     prerelease: prerelease
   });
 
@@ -157,17 +164,18 @@ async function run() {
       console.log("Release is a prerelease. Skipping major tag.");
     }
     else {    
-      console.log(`Creating/updating release tag: ${ next.major } `);
+      let tag = `${tagPrefix}${next.major}`;
+      console.log(`Creating/updating release tag: ${tag} `);
       try {
         await octokit.git.deleteRef({
           ...context.repo,
-          ref: `tags/${next.major}`
+          ref: `tags/${tag}`
         });
       }
       catch {}
       await octokit.git.createRef({
         ...context.repo,
-        ref: `refs/tags/${next.major}`,
+        ref: `refs/tags/${tag}`,
         sha: context.sha
       });
     }
@@ -178,17 +186,18 @@ async function run() {
       console.log("Release is a prerelease. Skipping minor tag.");
     }
     else {    
-      console.log(`Creating/updating release tag: ${ next.minor } `);
+      let tag = `${tagPrefix}${next.major}.${next.minor}`;
+      console.log(`Creating/updating release tag: ${tag} `);
       try {
         await octokit.git.deleteRef({
           ...context.repo,
-          ref: `tags/${next.minor}`
+          ref: `tags/${tag}`
         });
       }
       catch {}
       await octokit.git.createRef({
         ...context.repo,
-        ref: `refs/tags/${next.minor}`,
+        ref: `refs/tags/${tag}`,
         sha: context.sha
       });
     }

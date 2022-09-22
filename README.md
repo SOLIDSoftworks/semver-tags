@@ -52,12 +52,21 @@ The previous version number.
 ### `core-version`
 The core version part of the semantic version.
 
+### `major-version`
+The major version part of the semantic version.
+
+### `minor-version`
+The minor version part of the semantic version.
+
+### `patch-version`
+The patch version part of the semantic version.
+
 ### `semantic-version`
 The calculated version number.
 
 ## Example usage
 ```yaml
-uses: SOLIDSoftworks/semver-tags
+uses: SOLIDSoftworks/semver-tags@v1
 with:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
   tag-prefix: 'v'
