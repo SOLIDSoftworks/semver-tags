@@ -8,13 +8,15 @@ const nextVersion = function(semver, major, minor) {
   this.minor = minor;
 };
 
-function generateVersionPattern(tagPrefix, tagPrefixOptional) {
+function generateVersionPattern(tagPrefix, tagPrefixOptional = false) {
+  console.log('Generating version regex pattern');
   let optional = '';
-  if(!!tagPrefix, tagPrefixOptional) {
+  if(!!tagPrefix && tagPrefixOptional) {
     optional = '?';
   }
-  
-  return new RegExp(`^${tagPrefix}${optional}(\\d+)\\.(\\d+)\\.(\\d+)(-(\\w[\\w\.]*))?(\\+(\\w[\\w\\.]*))?$`, 'm');
+  let pattern = `^${tagPrefix}${optional}(\\d+)\\.(\\d+)\\.(\\d+)(-(\\w[\\w\.]*))?(\\+(\\w[\\w\\.]*))?$`;
+  console.log(`Generated pattern: ${pattern}`);
+  return new RegExp(pattern, 'm');
 }
 
 async function calculateNextVersion(previous) {
