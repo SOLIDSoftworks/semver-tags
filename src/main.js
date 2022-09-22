@@ -126,14 +126,54 @@ async function run() {
     process.exit(0);
   }
 
-  console.log(`Creating new release tag: ${ next } `);
+  console.log(`Creating new release tag: ${ next.semver } `);
   await octokit.rest.repos.createRelease({
     ...context.repo,
     tag_name: next.semver,
     prerelease: prerelease
   });
 
-  if()
+  if(addMajorTag) {
+    if(prerelease) {
+      console.log("Release is a prerelease. Skipping major tag.");
+    }
+    else {    
+      console.log(`Creating/updating release tag: ${ next.major } `);
+      try {
+        await octokit.git.deleteRef({
+          ...context.repo,
+          ref: `tags/${next.major}`
+        });
+      }
+      catch {}
+      await octokit.git.createRef({
+        ...context.repo,
+        ref: `refs/tags/${next.major}`,
+        sha: context.sha
+      });
+    }
+  }
+
+  if(addMinorTag) {
+    if(prerelease) {
+      console.log("Release is a prerelease. Skipping minor tag.");
+    }
+    else {    
+      console.log(`Creating/updating release tag: ${ next.minor } `);
+      try {
+        await octokit.git.deleteRef({
+          ...context.repo,
+          ref: `tags/${next.minor}`
+        });
+      }
+      catch {}
+      await octokit.git.createRef({
+        ...context.repo,
+        ref: `refs/tags/${next.minor}`,
+        sha: context.sha
+      });
+    }
+  }
 }
 
 run();
