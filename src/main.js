@@ -70,9 +70,9 @@ async function calculateNextVersion(previous) {
     let coreVersion = `${major}.${minor}.${patch}`;
     core.setOutput('core-version', coreVersion);
     semanticVersion += coreVersion;
-    majorVersion += major;
-    minorVersion += `${major}.${minor}`
   }
+  majorVersion += major;
+  minorVersion += `${major}.${minor}`
 
   if(prerelease) {
     console.log(`Prerelease configured. Adding '-${ prerelease }' to version number.`);
@@ -84,6 +84,8 @@ async function calculateNextVersion(previous) {
   }
   core.setOutput('semantic-version', semanticVersion);
   console.log(`Semantic version: ${semanticVersion}`);
+  console.log(`Major version: ${majorVersion}`);
+  console.log(`Minor version: ${minorVersion}`);
   return new nextVersion(tagPrefix + semanticVersion, tagPrefix + majorVersion, tagPrefix + minorVersion);
 }
 
