@@ -3,6 +3,7 @@ const core = require('@actions/core');
 const _ = require('lodash');
 
 
+const tagPrefix = core.getInput('tag-prefix');
 const versionPattern = new RegExp(`^${tagPrefix}(\\d+)\\.(\\d+)\\.(\\d+)(-(\\w[\\w\.]*))?(\\+(\\w[\\w\\.]*))?$`, 'm');
 const nextVersion = function(semver, major, minor) {
   this.semver = semver;
@@ -12,7 +13,6 @@ const nextVersion = function(semver, major, minor) {
 
 async function calculateNextVersion(previous) {
   const defaultVersion = core.getInput('default-version');
-  const tagPrefix = core.getInput('tag-prefix');
   const incrementedValue = core.getInput('incremented-value');
   const prerelease = core.getInput('prerelease');
   const metadata = core.getInput('metadata');
@@ -79,7 +79,6 @@ async function calculateNextVersion(previous) {
 
 async function run() {
   const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
-  const tagPrefix = core.getInput('tag-prefix');
   const dryRun = core.getInput('dry-run');
   const addMinorTag = core.getInput('add-minor-tag');
   const addMajorTag = core.getInput('add-major-tag');
