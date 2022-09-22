@@ -27515,8 +27515,13 @@ const nextVersion = function(semver, major, minor) {
   this.minor = minor;
 };
 
-function generateVersionPattern(tagPrefix) {
-  return new RegExp(`^${tagPrefix}(\\d+)\\.(\\d+)\\.(\\d+)(-(\\w[\\w\.]*))?(\\+(\\w[\\w\\.]*))?$`, 'm');
+function generateVersionPattern(tagPrefix, tagPrefixOptional) {
+  let optional = '';
+  if(!!tagPrefix, tagPrefixOptional) {
+    optional = '?';
+  }
+  
+  return new RegExp(`^${tagPrefix}${optional}(\\d+)\\.(\\d+)\\.(\\d+)(-(\\w[\\w\.]*))?(\\+(\\w[\\w\\.]*))?$`, 'm');
 }
 
 async function calculateNextVersion(previous) {
@@ -27525,7 +27530,7 @@ async function calculateNextVersion(previous) {
   const prerelease = core.getInput('prerelease');
   const metadata = core.getInput('metadata');
   const tagPrefix = core.getInput('tag-prefix');
-  const versionPattern = generateVersionPattern(tagPrefix);
+  const versionPattern = generateVersionPattern(tagPrefix, true);
 
   let semanticVersion = '';
   let majorVersion = '';
