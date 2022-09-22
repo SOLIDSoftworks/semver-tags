@@ -36,3 +36,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           incremented-value: ${{ github.event.inputs.incremented-value || 'patch' }}
           prerelease: ${{ github.event.inputs.prerelease || '' }}
+          tag-prefix: 'v'
+          add-major-tag: true
