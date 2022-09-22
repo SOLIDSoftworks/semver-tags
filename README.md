@@ -26,6 +26,14 @@ The prerelease tag that will be used in the semver version number.
 ### `metadata`
 The metadata tag that will be used in the semver version number.
 
+### `add-minor-tag`
+Adds/updates a tag for the major.minor version.
+### Default value `false`
+
+### `add-major-tag`
+Adds/updates a tag for the major version.
+### Default value `false`
+
 ### `dry-run`
 The prerelease tag that will be used in the semver version number.
 #### Default value `false`

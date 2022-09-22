@@ -25,6 +25,14 @@ inputs:
   metadata:
     description: 'The metadata to use.'
     required: false
+  add-minor-tag:
+    description: 'Adds/updates a tag for the major.minor version if the semver version isn't a prerelease.'
+    required: false
+    default: false
+  add-major-tag:
+    description: 'Adds/updates a tag for the major version if the semver version isn't a prerelease.'
+    required: false
+    default: false
   dry-run:
     description: 'Performs a version calculation without committing a tag.'
     required: false
