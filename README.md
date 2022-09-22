@@ -26,6 +26,12 @@ The prerelease tag that will be used in the semver version number.
 ### `metadata`
 The metadata tag that will be used in the semver version number.
 
+### `previous-major-version`
+A value to use for the major version when searching for the previous version tag.
+
+### `previous-minor-version`
+A value to use for the minor version when searching for the previous version tag.
+
 ### `add-minor-tag`
 Adds/updates a tag for the major.minor version.
 #### Default value `false`

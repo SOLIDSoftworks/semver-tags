@@ -25,6 +25,12 @@ inputs:
   metadata:
     description: 'The metadata to use.'
     required: false
+  previous-major-version:
+    description: 'A value to use for the major version when searching for the previous version tag.'
+    required: false    
+  previous-minor-version:
+    description: 'A value to use for the minor version when searching for the previous version tag.'
+    required: false    
   add-minor-tag:
     description: 'Adds/updates a tag for the major.minor version if the semver version is not a prerelease.'
     required: false

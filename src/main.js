@@ -8,13 +8,16 @@ const nextVersion = function(semver, major, minor) {
   this.minor = minor;
 };
 
-function generateVersionPattern(tagPrefix, tagPrefixOptional = false) {
+function generateVersionPattern(options) {
   console.log('Generating version regex pattern');
+
+  let majorVersion = options.previousMajorVersion || '\\d+';
+  let minorVersion = options.previousMinorVersion || '\\d+'
   let optional = '';
-  if(!!tagPrefix && tagPrefixOptional) {
+  if(!!options.tagPrefix && options.tagPrefixOptional) {
     optional = '?';
   }
-  let pattern = `^${tagPrefix}${optional}(\\d+)\\.(\\d+)\\.(\\d+)(-(\\w[\\w\.]*))?(\\+(\\w[\\w\\.]*))?$`;
+  let pattern = `^${options.tagPrefix}${optional}(${majorVersion})\\.(${minorVersion})\\.(\\d+)(-(\\w[\\w\.]*))?(\\+(\\w[\\w\\.]*))?$`;
   console.log(`Generated pattern: ${pattern}`);
   return new RegExp(pattern, 'm');
 }
@@ -25,7 +28,7 @@ async function calculateNextVersion(previous) {
   const prerelease = core.getInput('prerelease');
   const metadata = core.getInput('metadata');
   const tagPrefix = core.getInput('tag-prefix');
-  const versionPattern = generateVersionPattern(tagPrefix, true);
+  const versionPattern = generateVersionPattern({ tagPrefix: tagPrefix, options: true });
 
   let semanticVersion = '';
   let majorVersion = '';
@@ -95,8 +98,10 @@ async function run() {
   const addMinorTag = core.getInput('add-minor-tag');
   const addMajorTag = core.getInput('add-major-tag');
   const prerelease = !!core.getInput('prerelease');
+  const previousMajorVersion = core.getInput('previous-major-version');
+  const previousMinorVersion = core.getInput('previous-minor-version');
   const tagPrefix = core.getInput('tag-prefix');
-  const versionPattern = generateVersionPattern(tagPrefix);
+  const versionPattern = generateVersionPattern({ tagPrefix: tagPrefix, previousMajorVersion: previousMajorVersion, previousMinorVersion: previousMinorVersion });
 
   const octokit = github.getOctokit(GITHUB_TOKEN);
   const { context = {} } = github;
