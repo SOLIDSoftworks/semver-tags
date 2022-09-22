@@ -25,16 +25,16 @@ async function calculateNextVersion(previous) {
   let patch = '';
 
   if(!previous) {
+    console.log(`No previous version tag. Using '${ defaultVersion }' as next version.`);
     let matches = defaultVersion.match(versionPattern);
     major = matches.matches[1];
     minor = matches.matches[2];
     core.setOutput('core-version', defaultVersion);
     semanticVersion += defaultVersion; 
-    console.log(`No previous version tag. Using '${ semanticVersion }' as next version.`);
   }
   else {
-    core.setOutput('previous-version', previous.name);
     console.log(`Previous version tag '${ previous.name }' found. Calculating next version.`);
+    core.setOutput('previous-version', previous.name);
 
     major = previous.matches[1];
     minor = previous.matches[2];
@@ -89,6 +89,7 @@ async function run() {
 
   let page = 1;
   let tags = [];
+  console.log('Getting previous tags');
   while(true) {
     const response = await octokit.repos.listTags({
       owner: context.repo.owner,
