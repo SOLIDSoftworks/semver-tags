@@ -27509,20 +27509,23 @@ const github = __nccwpck_require__(5438);
 const core = __nccwpck_require__(2186);
 const _ = __nccwpck_require__(250);
 
-
-const tagPrefix = core.getInput('tag-prefix');
-const versionPattern = new RegExp(`^${tagPrefix}(\\d+)\\.(\\d+)\\.(\\d+)(-(\\w[\\w\.]*))?(\\+(\\w[\\w\\.]*))?$`, 'm');
 const nextVersion = function(semver, major, minor) {
   this.semver = semver;
   this.major = major;
   this.minor = minor;
 };
 
+function generateVersionPattern(tagPrefix) {
+  return new RegExp(`^${tagPrefix}(\\d+)\\.(\\d+)\\.(\\d+)(-(\\w[\\w\.]*))?(\\+(\\w[\\w\\.]*))?$`, 'm');
+}
+
 async function calculateNextVersion(previous) {
   const defaultVersion = core.getInput('default-version');
   const incrementedValue = core.getInput('incremented-value');
   const prerelease = core.getInput('prerelease');
   const metadata = core.getInput('metadata');
+  const tagPrefix = core.getInput('tag-prefix');
+  const versionPattern = generateVersionPattern(tagPrefix);
 
   let semanticVersion = '';
   let majorVersion = '';
@@ -27590,6 +27593,8 @@ async function run() {
   const addMinorTag = core.getInput('add-minor-tag');
   const addMajorTag = core.getInput('add-major-tag');
   const prerelease = !!core.getInput('prerelease');
+  const tagPrefix = core.getInput('tag-prefix');
+  const versionPattern = generateVersionPattern(tagPrefix);
 
   const octokit = github.getOctokit(GITHUB_TOKEN);
   const { context = {} } = github;
