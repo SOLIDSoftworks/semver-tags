@@ -6,6 +6,16 @@ on:
       - 'src/**/*.*'
       - 'packages.json'
       - '**.yml'
+  workflow_dispatch:
+   inputs:
+     incremented-value:
+       description: 'The part of the version number to increment.'
+       required: true
+       default: 'patch'    
+     prerelease:
+       description: 'The prerelease part of the version number.'
+       required: false
+       default: ''    
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,3 +34,5 @@ jobs:
       - uses: ./
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          incremented-value: ${{ github.event.inputs.incremented-value ?? 'patch' }}
+          prerelease: ${{ github.event.inputs.prerelease ?? '' }}
