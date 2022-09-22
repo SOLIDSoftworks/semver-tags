@@ -27589,11 +27589,11 @@ async function calculateNextVersion(previous) {
 
   if(prerelease) {
     console.log(`Prerelease configured. Adding '-${ prerelease }' to version number.`);
-    next += `-${prerelease}`;
+    semanticVersion += `-${prerelease}`;
   }
   if(metadata) {
     console.log(`Metadata configured. Adding '+${ metadata }' to version number.`);
-    next += `+${metadata}`;
+    semanticVersion += `+${metadata}`;
   }
   console.log(`Semantic version: ${semanticVersion}`);
   core.setOutput('semantic-version', semanticVersion);
