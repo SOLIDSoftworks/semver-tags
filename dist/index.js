@@ -27543,9 +27543,9 @@ async function calculateNextVersion(previous) {
 
   if(!previous) {
     console.log(`No previous version tag. Using '${ defaultVersion }' as next version.`);
-    let matches = defaultVersion.match(versionPattern);
-    major = matches.matches[1];
-    minor = matches.matches[2];
+    let match = defaultVersion.match(versionPattern);
+    major = match[1];
+    minor = match[2];
     core.setOutput('core-version', defaultVersion);
     semanticVersion += defaultVersion; 
   }
