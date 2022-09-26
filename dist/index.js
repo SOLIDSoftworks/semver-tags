@@ -27628,7 +27628,7 @@ async function run() {
       per_page: 100
     });
     if(response.status !== 200) {
-      console.err('Error in calling github api.');
+      console.err('Error in calling github api');
       process.exit(1);
     }
     tags = tags.concat(response.data);
@@ -27652,12 +27652,12 @@ async function run() {
   let next = await calculateNextVersion(previous);
 
   if(dryRun === 'true') {
-    console.log('Action configured for dry run. Exiting.');
+    console.log('Action configured for dry run. Exiting...');
     process.exit(0);
   }
   
   let tag = `${tagPrefix}${next.semver}`;
-  console.log(`Creating new release tag: ${ tag } `);
+  console.log(`Creating new release tag: ${ tag }`);
   await octokit.rest.repos.createRelease({
     ...context.repo,
     tag_name: tag,
@@ -27666,11 +27666,11 @@ async function run() {
 
   if(addMajorTag) {
     if(prerelease) {
-      console.log("Release is a prerelease. Skipping major tag.");
+      console.log("Release is a prerelease. Skipping major tag...");
     }
     else {    
       tag = `${tagPrefix}${next.major}`;
-      console.log(`Creating/updating release tag: ${tag} `);
+      console.log(`Creating/updating release tag: ${tag}`);
       try {
         await octokit.git.deleteRef({
           ...context.repo,
@@ -27688,11 +27688,11 @@ async function run() {
 
   if(addMinorTag) {
     if(prerelease) {
-      console.log("Release is a prerelease. Skipping minor tag.");
+      console.log("Release is a prerelease. Skipping minor tag...");
     }
     else {    
       tag = `${tagPrefix}${next.major}.${next.minor}`;
-      console.log(`Creating/updating release tag: ${tag} `);
+      console.log(`Creating/updating release tag: ${tag}`);
       try {
         await octokit.git.deleteRef({
           ...context.repo,
