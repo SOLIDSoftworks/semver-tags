@@ -27517,7 +27517,7 @@ const nextVersion = function(semver, major, minor, patch) {
 };
 
 function generateVersionPattern(options) {
-  console.log('Generating version regex pattern');
+  console.debug('Generating version regex pattern');
 
   let majorVersion = options.previousMajorVersion || '\\d+';
   let minorVersion = options.previousMinorVersion || '\\d+'
@@ -27526,7 +27526,7 @@ function generateVersionPattern(options) {
     optional = '?';
   }
   let pattern = `^${options.tagPrefix}${optional}(${majorVersion})\\.(${minorVersion})\\.(\\d+)(-(\\w[\\w\.]*))?(\\+(\\w[\\w\\.]*))?$`;
-  console.log(`Generated pattern: ${pattern}`);
+  console.debug(`Generated pattern: ${pattern}`);
   return new RegExp(pattern, 'm');
 }
 
@@ -27655,11 +27655,12 @@ async function run() {
     console.log('Action configured for dry run. Exiting.');
     process.exit(0);
   }
-
-  console.log(`Creating new release tag: ${ next.semver } `);
+  
+  let tag = `${tagPrefix}${next.semver}`;
+  console.log(`Creating new release tag: ${ tag } `);
   await octokit.rest.repos.createRelease({
     ...context.repo,
-    tag_name: tagPrefix + next.semver,
+    tag_name: tag,
     prerelease: prerelease
   });
 
@@ -27668,7 +27669,7 @@ async function run() {
       console.log("Release is a prerelease. Skipping major tag.");
     }
     else {    
-      let tag = `${tagPrefix}${next.major}`;
+      tag = `${tagPrefix}${next.major}`;
       console.log(`Creating/updating release tag: ${tag} `);
       try {
         await octokit.git.deleteRef({
@@ -27690,7 +27691,7 @@ async function run() {
       console.log("Release is a prerelease. Skipping minor tag.");
     }
     else {    
-      let tag = `${tagPrefix}${next.major}.${next.minor}`;
+      tag = `${tagPrefix}${next.major}.${next.minor}`;
       console.log(`Creating/updating release tag: ${tag} `);
       try {
         await octokit.git.deleteRef({
