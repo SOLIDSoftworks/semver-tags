@@ -1,1 +1,29 @@
-
+name: Tag
+on:
+  push:
+    branches: 
+      - main  
+    paths:
+      - 'dist/**/*.*'
+  workflow_dispatch:
+   inputs:
+     incremented-value:
+       description: 'The part of the version number to increment.'
+       required: true
+       default: 'patch'    
+     prerelease:
+       description: 'The prerelease part of the version number.'
+       required: false
+       default: ''    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          incremented-value: ${{ github.event.inputs.incremented-value || 'patch' }}
+          prerelease: ${{ github.event.inputs.prerelease || '' }}
+          tag-prefix: 'v'
+          add-major-tag: true

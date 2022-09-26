@@ -1,3 +1,4 @@
+name: Build
 on:
   push:
     branches: 
@@ -6,16 +7,6 @@ on:
       - 'src/**/*.*'
       - 'packages.json'
       - '**.yml'
-  workflow_dispatch:
-   inputs:
-     incremented-value:
-       description: 'The part of the version number to increment.'
-       required: true
-       default: 'patch'    
-     prerelease:
-       description: 'The prerelease part of the version number.'
-       required: false
-       default: ''    
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,11 +22,3 @@ jobs:
         with:
           default_author: github_actions
           message: 'CI build'
-      - uses: actions/checkout@v3
-      - uses: ./
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          incremented-value: ${{ github.event.inputs.incremented-value || 'patch' }}
-          prerelease: ${{ github.event.inputs.prerelease || '' }}
-          tag-prefix: 'v'
-          add-major-tag: true
