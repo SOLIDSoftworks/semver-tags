@@ -27517,7 +27517,7 @@ const nextVersion = function(semver, major, minor, patch) {
 };
 
 function generateVersionPattern(options) {
-  console.log('Generating version regex pattern');
+  console.debug('Generating version regex pattern');
 
   let majorVersion = options.previousMajorVersion || '\\d+';
   let minorVersion = options.previousMinorVersion || '\\d+'
@@ -27526,7 +27526,7 @@ function generateVersionPattern(options) {
     optional = '?';
   }
   let pattern = `^${options.tagPrefix}${optional}(${majorVersion})\\.(${minorVersion})\\.(\\d+)(-(\\w[\\w\.]*))?(\\+(\\w[\\w\\.]*))?$`;
-  console.log(`Generated pattern: ${pattern}`);
+  console.debug(`Generated pattern: ${pattern}`);
   return new RegExp(pattern, 'm');
 }
 
