@@ -32,9 +32,6 @@ async function calculateNextVersion(previous) {
   const versionPattern = generateVersionPattern({ tagPrefix: tagPrefix, tagPrefixOptional: true });
 
   let semanticVersion = '';
-  let majorVersion = '';
-  let minorVersion = '';
-  let patchVersion = '';
   let major = '';
   let minor = '';
   let patch = '';
@@ -102,8 +99,8 @@ async function calculateNextVersion(previous) {
 async function run() {
   const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
   const dryRun = core.getInput('dry-run');
-  const addMinorTag = core.getInput('add-minor-tag');
-  const addMajorTag = core.getInput('add-major-tag');
+  const addMinorTag = !!core.getInput('add-minor-tag');
+  const addMajorTag = !!core.getInput('add-major-tag');
   const prerelease = !!core.getInput('prerelease');
   const previousMajorVersion = core.getInput('previous-major-version');
   const previousMinorVersion = core.getInput('previous-minor-version');
