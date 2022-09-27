@@ -19,6 +19,10 @@ inputs:
     description: 'What value should be incremented?'
     required: false
     default: patch
+  create-release:
+    description: 'A value to set whether to create a release along with the tag. Values can be true|false|branch_name.'
+    required: false    
+    default: true
   prerelease:
     description: 'The prerelease tag to use.'
     required: false

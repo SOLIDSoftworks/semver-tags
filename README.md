@@ -20,6 +20,11 @@ What value should be incremented.
 #### Allowed values `'major'|'minor'|'patch'` 
 #### Default value `'patch'`
 
+### `create-release`
+A value to set whether to create a release along with the tag. If the value is a branch name, then a release is created if value equals the name of branch that triggered the workflow.
+#### Allowed values `true|false|branch_name`
+#### Default value `true`
+
 ### `prerelease`
 The prerelease tag that will be used in the semver version number.
 
