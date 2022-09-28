@@ -35,7 +35,7 @@ inputs:
   previous-minor-version:
     description: 'A value to use for the minor version when searching for the previous version tag.'
     required: false 
-  previous-prerelase:
+  previous-prerelease:
     description: 'A value to use for the prerelease value when searching for the previous version tag.'
     required: false        
   previous-metadata:
