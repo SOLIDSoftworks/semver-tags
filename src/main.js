@@ -19,14 +19,14 @@ function generateVersionPattern(options) {
     prerelease = `-(${options.previousPrerelease})`;
   } 
   let metadata = '(\\+(\\w[\\w\\.]*))?';
-  if(options.previousmetadata) {
-    prerelease = `\\+(${options.previousmetadata})`;
+  if(options.previousMetadata) {
+    prerelease = `\\+(${options.previousMetadata})`;
   } 
   let optional = '';
   if(!!options.tagPrefix && options.tagPrefixOptional) {
     optional = '?';
   }
-  let pattern = `^${options.tagPrefix}${optional}(${majorVersion})\\.(${minorVersion})\\.(\\d+)${prelease}${metadata}?$`;
+  let pattern = `^${options.tagPrefix}${optional}(${majorVersion})\\.(${minorVersion})\\.(\\d+)${prerelease}${metadata}?$`;
   console.debug(`Generated pattern: ${pattern}`);
   return new RegExp(pattern, 'm');
 }
