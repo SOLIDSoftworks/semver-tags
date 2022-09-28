@@ -27521,7 +27521,7 @@ function generateVersionPattern(options) {
 
   let majorVersion = options.previousMajorVersion || '\\d+';
   let minorVersion = options.previousMinorVersion || '\\d+'
-  let prelease = '(-(\\w[\\w\.]*))?';
+  let prerelease = '(-(\\w[\\w\.]*))?';
   if(options.previousPrerelease) {
     prerelease = `-(${options.previousPrerelease})`;
   } 
