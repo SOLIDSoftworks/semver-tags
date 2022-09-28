@@ -37,6 +37,12 @@ A value to use for the major version when searching for the previous version tag
 ### `previous-minor-version`
 A value to use for the minor version when searching for the previous version tag.
 
+### `previous-prerelease`
+A value to use for the prerelease value when searching for the previous version tag.
+
+### `previous-metadata`
+A value to use for the metadata value when searching for the previous version tag.
+
 ### `add-minor-tag`
 Adds/updates a tag for the major.minor version.
 #### Default value `false`
