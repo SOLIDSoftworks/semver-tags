@@ -27521,11 +27521,19 @@ function generateVersionPattern(options) {
 
   let majorVersion = options.previousMajorVersion || '\\d+';
   let minorVersion = options.previousMinorVersion || '\\d+'
+  let prelease = '(-(\\w[\\w\.]*))?';
+  if(options.previousPrerelease) {
+    prerelease = `-(${options.previousPrerelease})`;
+  } 
+  let metadata = '(\\+(\\w[\\w\\.]*))?';
+  if(options.previousmetadata) {
+    prerelease = `\\+(${options.previousmetadata})`;
+  } 
   let optional = '';
   if(!!options.tagPrefix && options.tagPrefixOptional) {
     optional = '?';
   }
-  let pattern = `^${options.tagPrefix}${optional}(${majorVersion})\\.(${minorVersion})\\.(\\d+)(-(\\w[\\w\.]*))?(\\+(\\w[\\w\\.]*))?$`;
+  let pattern = `^${options.tagPrefix}${optional}(${majorVersion})\\.(${minorVersion})\\.(\\d+)${prelease}${metadata}?$`;
   console.debug(`Generated pattern: ${pattern}`);
   return new RegExp(pattern, 'm');
 }
@@ -27612,8 +27620,17 @@ async function run() {
   const prerelease = !!core.getInput('prerelease');
   const previousMajorVersion = core.getInput('previous-major-version');
   const previousMinorVersion = core.getInput('previous-minor-version');
+  const previousPrerelease = core.getInput('previous-prerelease');
+  const previousMetadata = core.getInput('previous-metadata');
   const tagPrefix = core.getInput('tag-prefix');
-  const versionPattern = generateVersionPattern({ tagPrefix: tagPrefix, previousMajorVersion: previousMajorVersion, previousMinorVersion: previousMinorVersion });
+  const versionPatternOptions = {
+    tagPrefix: tagPrefix, 
+    previousMajorVersion: previousMajorVersion, 
+    previousMinorVersion: previousMinorVersion,
+    previousPrerelease: previousPrerelease,
+    previousMetadata: previousMetadata
+  };
+  const versionPattern = generateVersionPattern(versionPatternOptions);
 
   const octokit = github.getOctokit(GITHUB_TOKEN);
   const { context = {} } = github;
