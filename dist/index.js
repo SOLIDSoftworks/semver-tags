@@ -27606,8 +27606,9 @@ async function calculateNextVersion(previous) {
 async function run() {
   const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
   const dryRun = core.getInput('dry-run');
-  const addMinorTag = !!core.getInput('add-minor-tag');
-  const addMajorTag = !!core.getInput('add-major-tag');
+  const addMinorTag = core.getInput('add-minor-tag');
+  const addMajorTag = core.getInput('add-major-tag');
+  const createRelease = core.getInput('create-release');
   const prerelease = !!core.getInput('prerelease');
   const previousMajorVersion = core.getInput('previous-major-version');
   const previousMinorVersion = core.getInput('previous-minor-version');
@@ -27657,20 +27658,34 @@ async function run() {
   }
   
   let tag = `${tagPrefix}${next.semver}`;
-  console.log(`Creating new release tag: ${ tag }`);
-  await octokit.rest.repos.createRelease({
-    ...context.repo,
-    tag_name: tag,
-    prerelease: prerelease
-  });
+  let release = true;
+  if(!!createRelease) {
+    release = createRelease === 'true' || createRelease === process.env.GITHUB_REF_NAME;
+  }
+  if(release) {
+    console.log(`Creating new release tag: ${ tag }`);
+    await octokit.rest.repos.createRelease({
+      ...context.repo,
+      tag_name: tag,
+      prerelease: prerelease
+    });
+  }
+  else {
+    console.log(`Creating tag: ${tag}`);
+    await octokit.git.createRef({
+      ...context.repo,
+      ref: `refs/tags/${tag}`,
+      sha: context.sha
+    });
+  }
 
-  if(addMajorTag) {
+  if(addMajorTag === 'true') {
     if(prerelease) {
       console.log("Release is a prerelease. Skipping major tag...");
     }
     else {    
       tag = `${tagPrefix}${next.major}`;
-      console.log(`Creating/updating release tag: ${tag}`);
+      console.log(`Creating/updating tag: ${tag}`);
       try {
         await octokit.git.deleteRef({
           ...context.repo,
@@ -27686,13 +27701,13 @@ async function run() {
     }
   }
 
-  if(addMinorTag) {
+  if(addMinorTag === 'true') {
     if(prerelease) {
       console.log("Release is a prerelease. Skipping minor tag...");
     }
     else {    
       tag = `${tagPrefix}${next.major}.${next.minor}`;
-      console.log(`Creating/updating release tag: ${tag}`);
+      console.log(`Creating/updating tag: ${tag}`);
       try {
         await octokit.git.deleteRef({
           ...context.repo,
