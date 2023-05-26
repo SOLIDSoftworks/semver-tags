@@ -5,7 +5,8 @@ on:
       - main  
     paths:
       - 'src/**/*.*'
-      - 'packages.json'
+      - 'package.json'
+      - 'package-lock.json'
       - '**.yml'
 jobs:
   build:
