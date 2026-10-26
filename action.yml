@@ -12,7 +12,7 @@ inputs:
     required: false
     default: ''
   default-version:
-    description: 'The version number that will be used if no semver tag is found.'
+    description: 'The version number, without tag-prefix, that will be used if no semver tag is found.'
     required: false
     default: '1.0.0'
   incremented-value:

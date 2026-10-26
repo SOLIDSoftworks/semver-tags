@@ -13,6 +13,7 @@ A value prefixed to the version number when tagging the repo.
 
 ### `default-version`
 The version number that will be used if no semver tag is found.
+Provide the version without `tag-prefix` (for example, `1.1.0` with `tag-prefix: 'chart/'`). The prefix is added when creating the tag or release.
 #### Default value `'1.0.0'`
 
 ### `incremented-value`

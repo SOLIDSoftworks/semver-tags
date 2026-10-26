@@ -27544,11 +27544,7 @@ function generateVersionPattern(options) {
   if(options.previousMetadata) {
     prerelease = `\\+(${options.previousMetadata})`;
   } 
-  let optional = '';
-  if(!!options.tagPrefix && options.tagPrefixOptional) {
-    optional = '?';
-  }
-  let pattern = `^${options.tagPrefix}${optional}(${majorVersion})\\.(${minorVersion})\\.(\\d+)${prerelease}${metadata}?$`;
+  let pattern = `^${options.tagPrefix}(${majorVersion})\\.(${minorVersion})\\.(\\d+)${prerelease}${metadata}?$`;
   console.debug(`Generated pattern: ${pattern}`);
   return new RegExp(pattern, 'm');
 }
@@ -27558,8 +27554,7 @@ async function calculateNextVersion(previous) {
   const incrementedValue = core.getInput('incremented-value');
   const prerelease = core.getInput('prerelease');
   const metadata = core.getInput('metadata');
-  const tagPrefix = core.getInput('tag-prefix');
-  const versionPattern = generateVersionPattern({ tagPrefix: tagPrefix, tagPrefixOptional: true });
+  const versionPattern = generateVersionPattern({ tagPrefix: '' });
 
   let semanticVersion = '';
   let major = '';
@@ -27569,6 +27564,9 @@ async function calculateNextVersion(previous) {
   if(!previous) {
     console.log(`No previous version tag. Using '${ defaultVersion }' as next version.`);
     let match = defaultVersion.match(versionPattern);
+    if(!match) {
+      throw new Error(`Invalid default-version '${defaultVersion}'. Expected a version number without the tag-prefix.`);
+    }
     major = match[1];
     minor = match[2];
     patch = match[3];
