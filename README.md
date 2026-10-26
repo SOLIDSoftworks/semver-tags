@@ -27,7 +27,10 @@ A value to set whether to create a release along with the tag. If the value is a
 #### Default value `true`
 
 ### `prerelease`
-The prerelease tag that will be used in the semver version number.
+The prerelease label that will be used in the semver version number (for example, `alpha` or `rc.1`).
+Omit this input, leave it empty, or set it to the exact lowercase value `false` to disable the prerelease suffix.
+When disabled, GitHub Releases are not marked as prereleases and the requested major/minor tags are updated.
+The literal label `false` is reserved for disabling prereleases; it no longer produces a `-false` suffix.
 
 ### `metadata`
 The metadata tag that will be used in the semver version number.
@@ -85,3 +88,22 @@ with:
   default-version: '0.0.1'
   prerelease: 'alpha'
 ```
+
+### Prereleases based on the branch
+
+For a workflow triggered by pushes, use an expression to create stable tags on `main` and `alpha` tags on other branches:
+
+```yaml
+uses: SOLIDSoftworks/semver-tags@v1
+with:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  tag-prefix: 'v'
+  default-version: '1.0.0'
+  prerelease: ${{ github.ref != 'refs/heads/main' && 'alpha' || 'false' }}
+  create-release: main
+  add-minor-tag: true
+  add-major-tag: true
+```
+
+This creates GitHub Releases and updates major/minor tags only on `main`.
+Previous versions are still selected from repository-wide tags; this does not create independent version sequences per branch.

@@ -24,7 +24,7 @@ inputs:
     required: false    
     default: true
   prerelease:
-    description: 'The prerelease tag to use.'
+    description: 'The prerelease label to use. Omit, leave empty, or set to false to disable the prerelease suffix.'
     required: false
   metadata:
     description: 'The metadata to use.'
