@@ -27549,10 +27549,15 @@ function generateVersionPattern(options) {
   return new RegExp(pattern, 'm');
 }
 
+function getPrerelease() {
+  const prerelease = core.getInput('prerelease');
+  return prerelease === 'false' ? '' : prerelease;
+}
+
 async function calculateNextVersion(previous) {
   const defaultVersion = core.getInput('default-version');
   const incrementedValue = core.getInput('incremented-value');
-  const prerelease = core.getInput('prerelease');
+  const prerelease = getPrerelease();
   const metadata = core.getInput('metadata');
   const versionPattern = generateVersionPattern({ tagPrefix: '' });
 
@@ -27630,7 +27635,7 @@ async function run() {
   const addMinorTag = core.getInput('add-minor-tag');
   const addMajorTag = core.getInput('add-major-tag');
   const createRelease = core.getInput('create-release');
-  const prerelease = !!core.getInput('prerelease');
+  const prerelease = !!getPrerelease();
   const previousMajorVersion = core.getInput('previous-major-version');
   const previousMinorVersion = core.getInput('previous-minor-version');
   const previousPrerelease = core.getInput('previous-prerelease');

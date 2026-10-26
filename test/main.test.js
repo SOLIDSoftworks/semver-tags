@@ -15,6 +15,7 @@ async function runAction(inputs = {}, tags = []) {
   };
   const outputs = {};
   const refs = [];
+  const deletedRefs = [];
   const releases = [];
   const exited = new Error('Action exited');
   const mocks = {
@@ -26,7 +27,10 @@ async function runAction(inputs = {}, tags = []) {
       context: { repo: { owner: 'example', repo: 'charts' }, sha: 'abc123' },
       getOctokit: () => ({
         repos: { listTags: async () => ({ status: 200, data: tags.map(name => ({ name })) }) },
-        git: { createRef: async ref => { refs.push(ref); } },
+        git: {
+          createRef: async ref => { refs.push(ref); },
+          deleteRef: async ref => { deletedRefs.push(ref); }
+        },
         rest: { repos: { createRelease: async release => { releases.push(release); } } }
       })
     }
@@ -49,7 +53,7 @@ async function runAction(inputs = {}, tags = []) {
     if(error !== exited) throw error;
   }
 
-  return { outputs, refs, releases };
+  return { outputs, refs, deletedRefs, releases };
 }
 
 const tests = [];
@@ -114,6 +118,46 @@ test('appends prerelease and metadata to the default version', async () => {
   assert.equal(outputs['core-version'], '1.1.0');
   assert.equal(outputs['semantic-version'], '1.1.0-alpha.1+build.42');
 });
+
+for(const [label, inputs, suffix] of [
+  ['omitted', {}, ''],
+  ['empty', { prerelease: '' }, ''],
+  ['false', { prerelease: 'false' }, ''],
+  ['alpha', { prerelease: 'alpha' }, '-alpha'],
+  ['rc.1', { prerelease: 'rc.1' }, '-rc.1'],
+  ['false.1', { prerelease: 'false.1' }, '-false.1']
+]) {
+  for(const tags of [[], ['v1.1.3']]) {
+    for(const createRelease of ['true', 'false']) {
+      test(`handles prerelease '${label}' with ${tags.length} previous tags and create-release '${createRelease}'`, async () => {
+        const { outputs, refs, deletedRefs, releases } = await runAction({
+          ...inputs,
+          'tag-prefix': 'v',
+          'dry-run': 'false',
+          'create-release': createRelease,
+          'add-major-tag': 'true',
+          'add-minor-tag': 'true'
+        }, tags);
+        const coreVersion = tags.length ? '1.1.4' : '1.1.0';
+        const expectedVersion = `${coreVersion}${suffix}`;
+        assert.equal(outputs['core-version'], coreVersion);
+        assert.equal(outputs['semantic-version'], expectedVersion);
+        if(createRelease === 'true') {
+          assert.equal(releases.length, 1);
+          assert.equal(releases[0].tag_name, `v${expectedVersion}`);
+          assert.equal(releases[0].prerelease, suffix !== '');
+        }
+        else {
+          assert.equal(releases.length, 0);
+        }
+        const expectedRefs = createRelease === 'true' ? [] : [`refs/tags/v${expectedVersion}`];
+        if(!suffix) expectedRefs.push('refs/tags/v1', 'refs/tags/v1.1');
+        assert.deepEqual(refs.map(ref => ref.ref), expectedRefs);
+        assert.deepEqual(deletedRefs.map(ref => ref.ref), suffix ? [] : ['tags/v1', 'tags/v1.1']);
+      });
+    }
+  }
+}
 
 test('reports invalid defaults clearly', async () => {
   await assert.rejects(
